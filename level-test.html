@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Level Test · Speak Up Kids Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600;700&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red:      #E11D48;
+      --red-dk:   #9F1239;
+      --red-mid:  #FB7185;
+      --red-lt:   #FECDD3;
+      --red-pale: #FFF1F2;
+      --gold:     #F59E0B;
+      --gold-lt:  #FCD34D;
+      --dark:     #1C0A0D;
+      --gray:     #7A5560;
+      --cream:    #FFF5F6;
+      --white:    #ffffff;
+      --mint:     #10B981;
+      --sky:      #38BDF8;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 5%;
+      background: rgba(255,245,246,0.93); backdrop-filter: blur(14px);
+      border-bottom: 1.5px solid rgba(225,29,72,0.1);
+    }
+    .logo { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 900; color: var(--dark); text-decoration: none; }
+    .logo span { color: var(--red); }
+    .logo small { font-family: 'DM Sans', sans-serif; font-size: .6rem; font-weight: 600; color: var(--gray); display: block; letter-spacing: 1.5px; text-transform: uppercase; margin-top: -2px; }
+    .back-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: transparent; border: 1.5px solid rgba(225,29,72,.25);
+      color: var(--red); border-radius: 50px; padding: 8px 18px;
+      font-size: .85rem; font-weight: 700; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; text-decoration: none;
+      transition: all .2s;
+    }
+    .back-btn:hover { background: var(--red-pale); }
+
+    /* ── WRAPPER ── */
+    .page { padding-top: 80px; min-height: 100vh; }
+
+    /* ── SCREENS ── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── AGE SCREEN ── */
+    .age-screen {
+      min-height: calc(100vh - 80px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 20px;
+      background: linear-gradient(160deg, #fff5f6 50%, #ffe4e6 100%);
+      position: relative; overflow: hidden;
+    }
+    .age-blob {
+      position: absolute; border-radius: 50%; filter: blur(80px); opacity: .14; pointer-events: none;
+    }
+    .ab1 { width: 500px; height: 500px; background: var(--red); top: -150px; right: -100px; animation: fb 9s ease-in-out infinite; }
+    .ab2 { width: 300px; height: 300px; background: var(--gold); bottom: -80px; left: -60px; animation: fb 11s ease-in-out infinite reverse; }
+    @keyframes fb { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-24px)} }
+
+    .age-card {
+      background: var(--white); border-radius: 32px;
+      padding: 56px 52px; max-width: 560px; width: 100%;
+      box-shadow: 0 20px 60px rgba(225,29,72,.12);
+      text-align: center; position: relative; z-index: 1;
+      animation: slideUp .7s ease both;
+    }
+    @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+
+    .age-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--red-pale); border: 1.5px solid rgba(225,29,72,.25);
+      border-radius: 50px; padding: 6px 16px;
+      font-size: .78rem; font-weight: 700; color: var(--red);
+      margin-bottom: 28px;
+    }
+    .dot { width: 7px; height: 7px; background: var(--red); border-radius: 50%; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
+
+    .age-card h1 {
+      font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 900;
+      line-height: 1.2; margin-bottom: 10px;
+    }
+    .age-card h1 em { font-style: italic; color: var(--red); }
+    .age-arabic {
+      font-family: 'Tajawal', sans-serif; font-size: 1rem;
+      color: var(--gray); direction: rtl; margin-bottom: 36px; line-height: 1.6;
+    }
+
+    .age-options { display: flex; flex-direction: column; gap: 14px; }
+    .age-opt {
+      display: flex; align-items: center; gap: 18px;
+      background: var(--red-pale); border: 2px solid transparent;
+      border-radius: 18px; padding: 20px 24px; cursor: pointer;
+      transition: all .22s; text-align: left;
+    }
+    .age-opt:hover { border-color: var(--red-mid); background: #fff0f2; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(225,29,72,.12); }
+    .age-opt-emoji { font-size: 2rem; flex-shrink: 0; }
+    .age-opt-text h3 { font-weight: 700; font-size: 1rem; color: var(--dark); margin-bottom: 3px; }
+    .age-opt-text p  { font-size: .82rem; color: var(--gray); line-height: 1.4; }
+    .age-opt-arrow { margin-left: auto; font-size: 1.2rem; color: var(--red-mid); }
+
+    /* ── QUIZ SCREEN ── */
+    .quiz-screen {
+      min-height: calc(100vh - 80px);
+      padding: 40px 20px 80px;
+      background: linear-gradient(180deg, #fff5f6 0%, #ffe4e6 100%);
+    }
+    .quiz-inner { max-width: 680px; margin: 0 auto; }
+
+    /* Progress */
+    .progress-wrap { margin-bottom: 36px; }
+    .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .progress-label { font-size: .8rem; font-weight: 700; color: var(--gray); letter-spacing: 1px; text-transform: uppercase; }
+    .progress-count { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 900; color: var(--red); }
+    .progress-bar { background: var(--red-lt); border-radius: 50px; height: 8px; }
+    .progress-fill { height: 8px; border-radius: 50px; background: linear-gradient(90deg, var(--red), var(--gold)); transition: width .5s cubic-bezier(.4,0,.2,1); }
+
+    /* Question card */
+    .q-card {
+      background: var(--white); border-radius: 28px; padding: 42px 40px;
+      box-shadow: 0 8px 40px rgba(225,29,72,.1);
+      animation: qIn .4s ease both;
+    }
+    @keyframes qIn { from{opacity:0;transform:translateX(24px)} to{opacity:1;transform:translateX(0)} }
+    .q-category {
+      font-size: .72rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--red); margin-bottom: 10px;
+    }
+    .q-text {
+      font-family: 'Fraunces', serif; font-size: 1.45rem; font-weight: 700;
+      line-height: 1.35; color: var(--dark); margin-bottom: 8px;
+    }
+    .q-instruction { font-size: .85rem; color: var(--gray); margin-bottom: 28px; }
+
+    .options-grid { display: flex; flex-direction: column; gap: 12px; }
+    .opt-btn {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--red-pale); border: 2px solid transparent;
+      border-radius: 16px; padding: 16px 20px; cursor: pointer;
+      transition: all .2s; font-family: 'DM Sans', sans-serif;
+      text-align: left; width: 100%;
+    }
+    .opt-btn:hover:not(:disabled) { border-color: var(--red-mid); background: #fff0f2; transform: translateX(4px); }
+    .opt-btn.correct { border-color: var(--mint); background: rgba(16,185,129,.08); }
+    .opt-btn.wrong   { border-color: #EF4444; background: rgba(239,68,68,.07); }
+    .opt-btn:disabled { cursor: default; }
+    .opt-letter {
+      width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .88rem;
+      background: rgba(225,29,72,.12); color: var(--red);
+      transition: all .2s;
+    }
+    .opt-btn.correct .opt-letter { background: var(--mint); color: #fff; }
+    .opt-btn.wrong   .opt-letter { background: #EF4444; color: #fff; }
+    .opt-text { font-size: .96rem; font-weight: 500; color: var(--dark); }
+
+    .feedback {
+      margin-top: 18px; padding: 14px 20px; border-radius: 14px;
+      font-size: .88rem; font-weight: 600; display: none;
+      animation: fadeIn .3s ease;
+    }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    .feedback.correct { background: rgba(16,185,129,.1); color: #065F46; border: 1px solid rgba(16,185,129,.3); }
+    .feedback.wrong   { background: rgba(239,68,68,.08); color: #991B1B; border: 1px solid rgba(239,68,68,.25); }
+
+    .next-btn {
+      margin-top: 24px; width: 100%;
+      background: var(--red); color: #fff; border: none; border-radius: 50px;
+      padding: 16px; font-size: 1rem; font-weight: 700;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      box-shadow: 0 6px 20px rgba(225,29,72,.35);
+      transition: transform .2s, box-shadow .2s; display: none;
+    }
+    .next-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(225,29,72,.45); }
+
+    /* ── RESULT SCREEN ── */
+    .result-screen {
+      min-height: calc(100vh - 80px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 20px;
+      background: linear-gradient(160deg, #fff5f6 50%, #ffe4e6 100%);
+      position: relative; overflow: hidden;
+    }
+    .result-blob1 { position: absolute; width: 500px; height: 500px; background: var(--red); border-radius: 50%; filter: blur(90px); opacity: .1; top: -150px; right: -120px; }
+    .result-blob2 { position: absolute; width: 300px; height: 300px; background: var(--gold); border-radius: 50%; filter: blur(80px); opacity: .12; bottom: -80px; left: -60px; }
+
+    .result-card {
+      background: var(--white); border-radius: 32px;
+      padding: 52px 48px; max-width: 580px; width: 100%;
+      box-shadow: 0 20px 60px rgba(225,29,72,.13);
+      text-align: center; position: relative; z-index: 1;
+      animation: slideUp .7s ease both;
+    }
+    .result-top {
+      background: linear-gradient(135deg, var(--red-dk), var(--red));
+      border-radius: 22px; padding: 32px; margin-bottom: 32px;
+    }
+    .result-emoji-big { font-size: 3.5rem; margin-bottom: 12px; display: block; }
+    .result-age-shown {
+      display: inline-block; background: rgba(255,255,255,.18);
+      border-radius: 50px; padding: 5px 16px; font-size: .78rem;
+      font-weight: 700; color: rgba(255,255,255,.85); margin-bottom: 14px;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .result-level-title {
+      font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 900;
+      color: #fff; margin-bottom: 6px;
+    }
+    .result-level-arabic {
+      font-family: 'Tajawal', sans-serif; font-size: 1.1rem;
+      color: var(--gold-lt); direction: rtl;
+    }
+
+    .score-ring {
+      display: flex; align-items: center; justify-content: center;
+      gap: 32px; margin-bottom: 28px;
+    }
+    .score-circle {
+      width: 90px; height: 90px; border-radius: 50%;
+      border: 4px solid var(--red-lt);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+    }
+    .score-num { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; color: var(--red); line-height: 1; }
+    .score-lbl { font-size: .68rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+    .result-desc {
+      font-size: .96rem; color: var(--gray); line-height: 1.72;
+      margin-bottom: 28px;
+    }
+
+    .result-group {
+      background: var(--red-pale); border-radius: 18px; padding: 20px 24px;
+      margin-bottom: 28px;
+    }
+    .result-group-label { font-size: .72rem; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+    .result-group-name { font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 900; color: var(--dark); }
+    .result-group-sub { font-size: .84rem; color: var(--gray); margin-top: 4px; }
+
+    .result-btns { display: flex; flex-direction: column; gap: 12px; }
+    .btn-enroll {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      background: #25D366; color: #fff; border: none; border-radius: 50px;
+      padding: 15px 32px; font-size: .98rem; font-weight: 700;
+      cursor: pointer; font-family: 'DM Sans', sans-serif; text-decoration: none;
+      box-shadow: 0 6px 20px rgba(37,211,102,.35); transition: transform .2s;
+    }
+    .btn-enroll:hover { transform: translateY(-2px); }
+    .btn-retry {
+      background: transparent; color: var(--gray);
+      border: 1.5px solid rgba(122,85,96,.2); border-radius: 50px;
+      padding: 13px 32px; font-size: .92rem; font-weight: 600;
+      cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all .2s;
+    }
+    .btn-retry:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .age-card { padding: 36px 24px; }
+      .q-card   { padding: 28px 22px; }
+      .result-card { padding: 36px 24px; }
+      .q-text   { font-size: 1.2rem; }
+      nav { padding: 13px 4%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">Speak <span>Up</span> Kids Academy <small>🇲🇦 Level Test · مستوى</small></a>
+  <a class="back-btn" href="#">← Back to Site</a>
+</nav>
+
+<div class="page">
+
+  <!-- ── SCREEN 1: AGE ── -->
+  <div class="screen active" id="screen-age">
+    <div class="age-screen">
+      <div class="age-blob ab1"></div>
+      <div class="age-blob ab2"></div>
+      <div class="age-card">
+        <div class="age-badge"><span class="dot"></span> اعرف مستوى ولدك 📝</div>
+        <h1>First, how old is<br><em>your child?</em></h1>
+        <p class="age-arabic">قبل ما نبداو، خبرنا شحال عمر ولدك أو بنتك</p>
+        <div class="age-options">
+          <div class="age-opt" onclick="selectAge('6-8', '🌱 Young Learner · Ages 6–8')">
+            <span class="age-opt-emoji">🌱</span>
+            <div class="age-opt-text">
+              <h3>Young Learner</h3>
+              <p>Ages 6 – 8 · Perfect for beginners just starting out</p>
+            </div>
+            <span class="age-opt-arrow">→</span>
+          </div>
+          <div class="age-opt" onclick="selectAge('9-12', '🚀 Advanced Learner · Ages 9–12')">
+            <span class="age-opt-emoji">🚀</span>
+            <div class="age-opt-text">
+              <h3>Advanced Learner</h3>
+              <p>Ages 9 – 12 · Ready for more complex English</p>
+            </div>
+            <span class="age-opt-arrow">→</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2: QUIZ ── -->
+  <div class="screen" id="screen-quiz">
+    <div class="quiz-screen">
+      <div class="quiz-inner">
+        <div class="progress-wrap">
+          <div class="progress-top">
+            <span class="progress-label">Question</span>
+            <span class="progress-count" id="qCount">1 / 15</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="q-card" id="qCard">
+          <!-- injected by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 3: RESULT ── -->
+  <div class="screen" id="screen-result">
+    <div class="result-screen">
+      <div class="result-blob1"></div>
+      <div class="result-blob2"></div>
+      <div class="result-card">
+        <div class="result-top">
+          <span class="result-emoji-big" id="resEmoji">🌟</span>
+          <div class="result-age-shown" id="resAge"></div>
+          <div class="result-level-title" id="resLevel"></div>
+          <div class="result-level-arabic" id="resArabic"></div>
+        </div>
+        <div class="score-ring">
+          <div class="score-circle">
+            <span class="score-num" id="resScore">0</span>
+            <span class="score-lbl">Score</span>
+          </div>
+          <div style="text-align:left;">
+            <div style="font-size:.82rem;color:var(--gray);margin-bottom:4px;">Out of 15 questions</div>
+            <div style="font-family:'Fraunces',serif;font-size:1.1rem;font-weight:900;color:var(--dark);" id="resPercent"></div>
+          </div>
+        </div>
+        <p class="result-desc" id="resDesc"></p>
+        <div class="result-group">
+          <div class="result-group-label">Recommended Group · المجموعة المناسبة</div>
+          <div class="result-group-name" id="resGroup"></div>
+          <div class="result-group-sub" id="resGroupSub"></div>
+        </div>
+        <div class="result-btns">
+          <a class="btn-enroll" id="resWa" href="https://wa.me/212725855578?text=Hi!%20I%27m%20interested%20in%20Speak%20Up%20Academy%20for%20my%20child" target="_blank">💬 Enroll on WhatsApp Now</a>
+          <button class="btn-retry" onclick="restartAll()">↺ Take the test again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- .page -->
+
+<script>
+  // ── STATE ──
+  let selectedAge = '';
+  let selectedAgeLabel = '';
+  let currentQ = 0;
+  let score = 0;
+  let answered = false;
+
+  // ── QUESTIONS ──
+  // Two banks: young (6-8) and older (9-12)
+  const questionsYoung = [
+    {
+      category: '🌈 Greetings',
+      text: 'How do you say "مرحبا" in English?',
+      opts: ['Goodbye', 'Hello', 'Please', 'Sorry'],
+      answer: 1
+    },
+    {
+      category: '🎨 Colors',
+      text: 'Which color is "أحمر"?',
+      opts: ['Blue', 'Green', 'Red', 'Yellow'],
+      answer: 2
+    },
+    {
+      category: '🔢 Numbers',
+      text: 'What comes after "four"?',
+      opts: ['Three', 'Six', 'Five', 'Seven'],
+      answer: 2
+    },
+    {
+      category: '🐾 Animals',
+      text: 'What is "قطة" in English?',
+      opts: ['Dog', 'Cat', 'Bird', 'Fish'],
+      answer: 1
+    },
+    {
+      category: '👨‍👩‍👧 Family',
+      text: 'What do you call your father\'s mother?',
+      opts: ['Aunt', 'Sister', 'Grandmother', 'Mother'],
+      answer: 2
+    },
+    {
+      category: '🍎 Food',
+      text: 'Which one is a fruit?',
+      opts: ['Chair', 'Apple', 'Book', 'Shoe'],
+      answer: 1
+    },
+    {
+      category: '📅 Days',
+      text: 'Which day comes after Sunday?',
+      opts: ['Friday', 'Saturday', 'Tuesday', 'Monday'],
+      answer: 3
+    },
+    {
+      category: '🏠 Places',
+      text: 'Where do you go to learn and study?',
+      opts: ['Hospital', 'School', 'Market', 'Park'],
+      answer: 1
+    },
+    {
+      category: '🧩 Grammar',
+      text: 'Choose the correct sentence:',
+      opts: ['I am happy', 'I are happy', 'I is happy', 'Am I happy'],
+      answer: 0
+    },
+    {
+      category: '🌤️ Weather',
+      text: 'What do you say when the sky is dark and it rains?',
+      opts: ['It\'s sunny', 'It\'s windy', 'It\'s rainy', 'It\'s hot'],
+      answer: 2
+    },
+    {
+      category: '🕐 Time',
+      text: 'What do you say in the morning when you wake up?',
+      opts: ['Good night', 'Good afternoon', 'Good morning', 'Good evening'],
+      answer: 2
+    },
+    {
+      category: '🧩 Grammar',
+      text: 'Which is the correct question?',
+      opts: ['What is your name?', 'What your name is?', 'Your name what is?', 'Is what your name?'],
+      answer: 0
+    },
+    {
+      category: '🐶 Animals',
+      text: 'What sound does a dog make?',
+      opts: ['Meow', 'Moo', 'Woof', 'Baa'],
+      answer: 2
+    },
+    {
+      category: '🎒 School',
+      text: 'What do you use to write on paper?',
+      opts: ['Ruler', 'Pencil', 'Eraser', 'Bag'],
+      answer: 1
+    },
+    {
+      category: '💬 Conversation',
+      text: 'Someone gives you a gift. What do you say?',
+      opts: ['Sorry', 'Please', 'Thank you', 'Excuse me'],
+      answer: 2
+    }
+  ];
+
+  const questionsOlder = [
+    {
+      category: '🧩 Grammar',
+      text: 'Choose the correct sentence:',
+      opts: ['She don\'t like chocolate', 'She doesn\'t likes chocolate', 'She doesn\'t like chocolate', 'She not like chocolate'],
+      answer: 2
+    },
+    {
+      category: '📖 Vocabulary',
+      text: 'What does "exhausted" mean?',
+      opts: ['Very hungry', 'Very tired', 'Very happy', 'Very bored'],
+      answer: 1
+    },
+    {
+      category: '🧩 Grammar',
+      text: 'Which sentence is in the past tense?',
+      opts: ['I go to school', 'I will go to school', 'I went to school', 'I am going to school'],
+      answer: 2
+    },
+    {
+      category: '💬 Connectors',
+      text: 'Complete: "I like football _____ it\'s exciting."',
+      opts: ['but', 'because', 'although', 'so'],
+      answer: 1
+    },
+    {
+      category: '📖 Vocabulary',
+      text: 'What is the opposite of "ancient"?',
+      opts: ['Old', 'Modern', 'Slow', 'Heavy'],
+      answer: 1
+    },
+    {
+      category: '🧩 Grammar',
+      text: 'Choose the correct form: "She ___ TV every evening."',
+      opts: ['watch', 'watching', 'watches', 'watched'],
+      answer: 2
+    },
+    {
+      category: '📝 Reading',
+      text: '"The boy ran quickly to catch the bus." What did the boy do?',
+      opts: ['He missed the bus', 'He walked to school', 'He ran fast to reach the bus', 'He waited for the bus'],
+      answer: 2
+    },
+    {
+      category: '💬 Connectors',
+      text: 'Which word shows contrast?',
+      opts: ['because', 'therefore', 'however', 'also'],
+      answer: 2
+    },
+    {
+      category: '🧩 Grammar',
+      text: 'Choose the correct question: "_____ have you been living here?"',
+      opts: ['How much', 'How many', 'How long', 'How often'],
+      answer: 2
+    },
+    {
+      category: '📖 Vocabulary',
+      text: 'Which word means "to make something better"?',
+      opts: ['Destroy', 'Improve', 'Ignore', 'Repeat'],
+      answer: 1
+    },
+    {
+      category: '🧩 Grammar',
+      text: 'Choose the correct sentence:',
+      opts: ['I have seen that film yesterday', 'I saw that film yesterday', 'I did see that film yesterday', 'I see that film yesterday'],
+      answer: 1
+    },
+    {
+      category: '💬 Expression',
+      text: '"Despite the rain, _____ went to the match."',
+      opts: ['but they', 'they still', 'however they', 'because they'],
+      answer: 1
+    },
+    {
+      category: '📖 Vocabulary',
+      text: 'What does "determined" mean?',
+      opts: ['Very confused', 'Very sad', 'Strongly decided to do something', 'Easily giving up'],
+      answer: 2
+    },
+    {
+      category: '🧩 Grammar',
+      text: 'Which sentence uses the future correctly?',
+      opts: ['I am going to visit London next week', 'I visit London next week', 'I visited London next week', 'I was visiting London next week'],
+      answer: 0
+    },
+    {
+      category: '💬 Conversation',
+      text: 'You disagree politely. What do you say?',
+      opts: ['You are wrong!', 'I don\'t think so, because...', 'No, never!', 'That\'s impossible'],
+      answer: 1
+    }
+  ];
+
+  let questions = [];
+
+  // ── SELECT AGE ──
+  function selectAge(age, label) {
+    selectedAge = age;
+    selectedAgeLabel = label;
+    questions = age === '6-8' ? questionsYoung : questionsOlder;
+    currentQ = 0;
+    score = 0;
+    showScreen('screen-quiz');
+    renderQuestion();
+  }
+
+  // ── SHOW SCREEN ──
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // ── RENDER QUESTION ──
+  function renderQuestion() {
+    answered = false;
+    const q = questions[currentQ];
+    const total = questions.length;
+    const pct = (currentQ / total) * 100;
+
+    document.getElementById('qCount').textContent = (currentQ + 1) + ' / ' + total;
+    document.getElementById('progressFill').style.width = pct + '%';
+
+    const letters = ['A', 'B', 'C', 'D'];
+    const optsHTML = q.opts.map((opt, i) => `
+      <button class="opt-btn" onclick="selectAnswer(${i})">
+        <span class="opt-letter">${letters[i]}</span>
+        <span class="opt-text">${opt}</span>
+      </button>
+    `).join('');
+
+    document.getElementById('qCard').innerHTML = `
+      <div class="q-category">${q.category}</div>
+      <div class="q-text">${q.text}</div>
+      <p class="q-instruction">Choose the correct answer:</p>
+      <div class="options-grid">${optsHTML}</div>
+      <div class="feedback" id="feedback"></div>
+      <button class="next-btn" id="nextBtn" onclick="nextQuestion()">
+        ${currentQ + 1 < total ? 'Next Question →' : 'See My Results 🎉'}
+      </button>
+    `;
+    // re-animate
+    document.getElementById('qCard').style.animation = 'none';
+    setTimeout(() => document.getElementById('qCard').style.animation = 'qIn .4s ease both', 10);
+  }
+
+  // ── SELECT ANSWER ──
+  function selectAnswer(idx) {
+    if (answered) return;
+    answered = true;
+    const q = questions[currentQ];
+    const btns = document.querySelectorAll('.opt-btn');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('nextBtn');
+
+    btns.forEach(b => b.disabled = true);
+
+    if (idx === q.answer) {
+      score++;
+      btns[idx].classList.add('correct');
+      feedback.textContent = '✅ Correct! Well done!';
+      feedback.className = 'feedback correct';
+    } else {
+      btns[idx].classList.add('wrong');
+      btns[q.answer].classList.add('correct');
+      feedback.textContent = '❌ Not quite — the correct answer is: ' + q.opts[q.answer];
+      feedback.className = 'feedback wrong';
+    }
+    feedback.style.display = 'block';
+    nextBtn.style.display = 'block';
+  }
+
+  // ── NEXT QUESTION ──
+  function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) {
+      renderQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  // ── SHOW RESULTS ──
+  function showResults() {
+    const total = questions.length;
+    const pct = Math.round((score / total) * 100);
+
+    let emoji, level, arabic, desc, group, groupSub;
+
+    if (selectedAge === '6-8') {
+      if (score <= 5) {
+        emoji = '🌱'; level = 'Beginner · المبتدئ'; arabic = 'مستوى: الأساسي — خطوة خطوة!';
+        desc = 'No worries at all! Your child is at the perfect starting point. We will build their confidence from zero using fun games and activities — b chwiya b chwiya, they will surprise you! 🌟';
+        group = selectedAge === '6-8' ? '👸 Group l-Amirat or 🦸 Group l-Abtal · Phase 1' : '👸 Group l-Amirat or 🦸 Group l-Abtal · Phase 1';
+        groupSub = 'Starting from foundations — vocabulary, simple phrases & confidence building';
+      } else if (score <= 10) {
+        emoji = '🚀'; level = 'Elementary · المتوسط'; arabic = 'مستوى: المتوسط — قريب من الطلاقة!';
+        desc = 'Great foundation! Your child already knows the basics and will move quickly in our program from simple phrases to full confident conversations. 💪';
+        group = '👸 Group l-Amirat or 🦸 Group l-Abtal · Phase 1 → 2';
+        groupSub = 'Fast-tracking through Phase 1 into advanced expression';
+      } else {
+        emoji = '⭐'; level = 'Intermediate · المتقدم'; arabic = 'مستوى: المتقدم — جاهز للتميز!';
+        desc = 'Impressive! Your child has a strong base and is ready to jump straight into advanced speaking, connectors and full paragraph expression. They are going to shine! 🌟';
+        group = '👸 Group l-Amirat or 🦸 Group l-Abtal · Phase 2';
+        groupSub = 'Jumping straight into advanced expression & fluency';
+      }
+    } else {
+      if (score <= 5) {
+        emoji = '🌱'; level = 'Beginner · المبتدئ'; arabic = 'مستوى: الأساسي — خطوة خطوة!';
+        desc = 'No worries! Your child will start with our structured foundation phase, moving at the right pace to build real vocabulary and confidence before advancing. 🌟';
+        group = '👸 Group l-Amirat or 🦸 Group l-Abtal · Phase 1';
+        groupSub = 'Building solid grammar, vocabulary and sentence structure';
+      } else if (score <= 10) {
+        emoji = '🚀'; level = 'Elementary · المتوسط'; arabic = 'مستوى: المتوسط — قريب من الطلاقة!';
+        desc = 'Well done! Your child has a good foundation and will thrive as they move from structured sentences to full flowing paragraphs and confident expression. 💪';
+        group = '👸 Group l-Amirat or 🦸 Group l-Abtal · Phase 1 → 2';
+        groupSub = 'Bridging foundations into complex expression and fluency';
+      } else {
+        emoji = '⭐'; level = 'Advanced · المتقدم'; arabic = 'مستوى: المتقدم — جاهز للتميز!';
+        desc = 'Outstanding! Your child is already strong and will be challenged with complex phrases, debate-style expression, storytelling and full paragraph fluency. 🌟';
+        group = '👸 Group l-Amirat or 🦸 Group l-Abtal · Phase 2';
+        groupSub = 'Advanced connectors, storytelling, presentations & fluency';
+      }
+    }
+
+    document.getElementById('resEmoji').textContent = emoji;
+    document.getElementById('resAge').textContent = selectedAgeLabel;
+    document.getElementById('resLevel').textContent = level;
+    document.getElementById('resArabic').textContent = arabic;
+    document.getElementById('resScore').textContent = score;
+    document.getElementById('resPercent').textContent = pct + '% Correct';
+    document.getElementById('resDesc').textContent = desc;
+    document.getElementById('resGroup').textContent = group;
+    document.getElementById('resGroupSub').textContent = groupSub;
+
+    document.getElementById('progressFill').style.width = '100%';
+    showScreen('screen-result');
+  }
+
+  // ── RESTART ──
+  function restartAll() {
+    currentQ = 0; score = 0; answered = false;
+    selectedAge = ''; selectedAgeLabel = '';
+    showScreen('screen-age');
+  }
+</script>
+
+</body>
+</html>
